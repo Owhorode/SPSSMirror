@@ -1,7 +1,6 @@
 # SPSSMirror
 
 [![PyPI version](https://img.shields.io/pypi/v/spssmirror.svg)](https://pypi.org/project/spssmirror/)
-[![Python versions](https://img.shields.io/pypi/pyversions/spssmirror.svg)](https://pypi.org/project/spssmirror/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 **SPSSMirror** is a unified, self-contained statistical analysis library for
