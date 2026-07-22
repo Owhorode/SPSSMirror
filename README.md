@@ -5,7 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 **SPSSMirror** is a unified, self-contained statistical analysis library for
-Python — a modern SPSS/R replacement. Every method wraps
+Python. It merges statistical libraries under one umbrella. Every method wraps
 scipy/statsmodels/scikit-learn/lifelines/pymc/arch internally and returns a
 typed, immutable result object with the statistic, p-value, effect size, and
 confidence interval already computed. **You never need to import those
@@ -180,4 +180,4 @@ engineered scenario).
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT.
