@@ -11,8 +11,53 @@ class DataQuality(BaseModel):
 
 
 class BaseResult(BaseModel):
-    """Common ancestor for every SPSSMirror result."""
+    """Common ancestor for every SPSSMirror result. Renders like pandas:
+    a single-result object shows as a pandas Series, a result containing
+    a list of sub-items (coefficients, terms, components...) shows as a
+    pandas DataFrame -- one row per item, exactly like a normal pandas
+    table."""
     model_config = ConfigDict(frozen=True, arbitrary_types_allowed=True)
+
+    # Fields excluded from display: raw arrays meant for programmatic use
+    # (plotting, further computation), not for reading on screen.
+    _ARRAY_FIELDS = {
+        "values", "samples", "residuals", "fitted_values", "standardized_residuals",
+        "leverage", "cooks_distance", "loadings", "x_values", "y_values",
+        "conditional_volatility", "original_values", "group_effects", "matrix",
+        "p_matrix", "scores", "labels", "linkage_matrix",
+    }
+
+    def to_frame(self):
+        """Returns this result as a pandas Series (single result) or
+        DataFrame (result containing a list of sub-items) -- standard
+        pandas objects, usable with every normal pandas method."""
+        import pandas as pd
+        data = self.model_dump()
+        table_field = None
+        for k, v in data.items():
+            if k in self._ARRAY_FIELDS:
+                continue
+            if isinstance(v, list) and v and isinstance(v[0], dict):
+                table_field = k
+                break
+        if table_field:
+            return pd.DataFrame(data[table_field])
+        scalar = {
+            k: v for k, v in data.items()
+            if k not in self._ARRAY_FIELDS and not isinstance(v, (list, dict))
+        }
+        return pd.Series(scalar, name=type(self).__name__)
+
+    def __repr__(self) -> str:
+        return repr(self.to_frame())
+
+    def __str__(self) -> str:
+        return str(self.to_frame())
+
+    def _repr_html_(self):
+        obj = self.to_frame()
+        frame = obj.to_frame() if hasattr(obj, "to_frame") and not hasattr(obj, "columns") else obj
+        return frame._repr_html_()
 
 
 class StatTestResult(BaseResult):
