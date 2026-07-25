@@ -13,7 +13,9 @@ libraries yourself** to get a complete answer.
 ```python
 from spssmirror import SPSSMirror
 
-mirror = SPSSMirror().load_csv("survey.csv")
+mirror = SPSSMirror()
+df = mirror.load_csv("survey.csv")
+df.head()
 result = mirror.regression().linear("score ~ age + C(group)")
 print(result.r_squared, result.coefficients)
 ```
